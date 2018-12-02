@@ -1,18 +1,35 @@
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router';
+import {Provider} from 'react-redux';
 import Routes from '../App/Routes';
-
+import configureStore from '../App/configureStore'
 import { flushChunkNames } from 'react-universal-component/server';
 import flushChunks from 'webpack-flush-chunks';
 
 export default ({ clientStats }) => (req, res) => {
+	
+	let initialState = {
+		reducer1: {
+			articles: []
+		},
+		reducer2: {
+			users: []
+		}
+
+	}
+
+	const store = configureStore(initialState)
+	const preloadedState = store.getState()
 
 	const app = renderToString(
-		<StaticRouter location={req.originalUrl}>
-			<Routes />
-		</StaticRouter>,
+		<Provider store={store}>
+			<StaticRouter location={req.originalUrl}>
+				<Routes />
+			</StaticRouter>
+		</Provider>
 	);
+
 
 	const { js, styles, cssHash } = flushChunks(clientStats, {
 		chunkNames: flushChunkNames(),
@@ -29,8 +46,12 @@ export default ({ clientStats }) => (req, res) => {
 					<meta name="theme-color" content="#000000"/>${styles}
 				</head>
 				<body>
+					<script>
+						window.__STATE__ = ${JSON.stringify(preloadedState)}
+					</script>
 					<div id="react-root">${app}</div>
-				</body>${js}${cssHash}
+					${js}${cssHash}
+				</body>
 			</html>`,
 		);
 };
