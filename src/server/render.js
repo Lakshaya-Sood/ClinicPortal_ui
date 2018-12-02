@@ -3,33 +3,34 @@ import { renderToString } from 'react-dom/server';
 import { StaticRouter } from 'react-router';
 import Routes from '../App/Routes';
 
+import { flushChunkNames } from 'react-universal-component/server';
+import flushChunks from 'webpack-flush-chunks';
+
 export default ({ clientStats }) => (req, res) => {
 
-	let lang = 'en';
-
-	const context = {};
 	const app = renderToString(
-		<StaticRouter location={req.originalUrl} context={context}>
-			<Routes lang={lang} />
+		<StaticRouter location={req.originalUrl}>
+			<Routes />
 		</StaticRouter>,
 	);
+
+	const { js, styles, cssHash } = flushChunks(clientStats, {
+		chunkNames: flushChunkNames(),
+	});
 
 	const status = 200;
 
 	res
 		.status(status)
-		.send(
-			`
+		.send(`
 			<!doctype html>
-			<html lang="${lang}">
+			<html lang="en">
 				<head>
-					<meta name="theme-color" content="#000000"/>
+					<meta name="theme-color" content="#000000"/>${styles}
 				</head>
 				<body>
-					<div id="react-root">
-						${app}
-					</div>
-				</body>
+					<div id="react-root">${app}</div>
+				</body>${js}${cssHash}
 			</html>`,
 		);
 };
