@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './MyPage.css';
 import { connect } from "react-redux";
 import { addArticle } from "./action";
-
+import ClippedDrawer from './SideMenu'
 const mapStateToProps = state => {
     return { articles: state.reducer1.articles };
   };
@@ -31,11 +31,8 @@ class MyPage extends React.Component {
     }
     render() {
         return (
-            <div className={styles.red}>
-                <ul>
-                    {this.renderList()}
-                </ul>
-                <button onClick={() => this.props.addArticle('x')}>ADD X to List</button>
+            <div>
+                <ClippedDrawer />
             </div>
         );
     }
