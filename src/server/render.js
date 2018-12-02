@@ -7,35 +7,8 @@ import configureStore from '../App/configureStore'
 import { flushChunkNames } from 'react-universal-component/server';
 import flushChunks from 'webpack-flush-chunks';
 
-import { SheetsRegistry } from 'jss';
-import JssProvider from 'react-jss/lib/JssProvider';
-import {
-  MuiThemeProvider,
-  createMuiTheme,
-  createGenerateClassName,
-} from '@material-ui/core/styles';
-import green from '@material-ui/core/colors/green';
-import red from '@material-ui/core/colors/red';
-
 export default ({ clientStats }) => (req, res) => {
-	// Create a sheetsRegistry instance.
-	const sheetsRegistry = new SheetsRegistry();
-
-	// Create a sheetsManager instance.
-	const sheetsManager = new Map();
-
-	// Create a theme instance.
-	const theme = createMuiTheme({
-	palette: {
-		primary: green,
-		accent: red,
-		type: 'light',
-	},
-	});
-
-	// Create a new class name generator.
-	const generateClassName = createGenerateClassName();
-
+	
 	let initialState = {
 		reducer1: {
 			articles: []
@@ -50,15 +23,10 @@ export default ({ clientStats }) => (req, res) => {
 	const preloadedState = store.getState()
 
 	const app = renderToString(
-
 		<Provider store={store}>
-			<JssProvider registry={sheetsRegistry} generateClassName={generateClassName}>
-      			<MuiThemeProvider theme={theme} sheetsManager={sheetsManager}>
-					<StaticRouter location={req.originalUrl} context={{}}>
-							<Routes />
-					</StaticRouter>
-				</MuiThemeProvider>
-			</JssProvider>
+			<StaticRouter location={req.originalUrl} context={{}}>
+				<Routes />
+			</StaticRouter>
 		</Provider>
 	);
 
@@ -66,8 +34,6 @@ export default ({ clientStats }) => (req, res) => {
 	const { js, styles, cssHash } = flushChunks(clientStats, {
 		chunkNames: flushChunkNames(),
 	});
-
-	const material_css = sheetsRegistry.toString()
 
 	const status = 200;
 
@@ -77,7 +43,8 @@ export default ({ clientStats }) => (req, res) => {
 			<!doctype html>
 			<html lang="en">
 				<head>
-					<meta name="theme-color" content="#000000"/>${styles}${material_css}
+					<meta name="theme-color" content="#000000"/>${styles}
+					<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 				</head>
 				<body>
 					<script>
