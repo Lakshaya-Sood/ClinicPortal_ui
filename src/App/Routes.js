@@ -2,6 +2,7 @@ import React from 'react';
 import universal from 'react-universal-component';
 import { Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
+import styles from './loading.css';
 import logo from '../assets/images/logo.svg';
 import {Navbar,Glyphicon} from 'react-bootstrap';
 

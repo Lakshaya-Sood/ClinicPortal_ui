@@ -32,7 +32,7 @@ class MyPage extends React.Component {
     render() {
         return (
             <div>
-                <Row style={{position:"relative",top:'100px'}}>
+                <Row style={{position:"relative",top:'100px',width:"100%"}}>
                     <Col md={4}/>
                     <Col md={4}>
                         <Panel style={{height:'170px'}}>

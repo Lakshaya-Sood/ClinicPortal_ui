@@ -25,7 +25,7 @@ class Login extends React.Component {
     }
     OnLoginClick(){
         let {username,password} = this.state
-        console.log(username,password)
+        
         if( username === 'admin' && password === 'admin' ) {
             this.setState({redirect: true})
         } else {
@@ -42,19 +42,21 @@ class Login extends React.Component {
         this.setState({alertList: []})
     }
     renderRedirect(){
-        return this.state.redirect ? (<Redirect to='/' />) : ('');
+        return <Redirect to='/' />
     }
     render() {
+        if(this.state.redirect){
+            return this.renderRedirect()
+        }
         return (
             <div>
-                {this.renderRedirect()}
                 <AlertList
 					position={"bottom-right"}
 					alerts={this.state.alertList}
                     timeout={2000}
                     onDismiss={this.onAlertDismissed}
 				/>
-                <Row style={{position:"relative",top:'30px'}}>
+                <Row style={{position:"relative",top:'30px',width:"100%"}}>
                     <Col md={4}/>
                     <Col md={4}>
                         <Panel style={{height:'350px'}}>
@@ -99,7 +101,7 @@ class Login extends React.Component {
                                         </Col>
                                     </Row>
                                     <Row>
-                                        <Col md={8} mdOffset={2}>
+                                        <Col md={10} mdOffset={2}>
                                             <HelpBlock>Must be 5 character long and alphanumeric</HelpBlock>
                                         </Col>
                                     </Row>
