@@ -14,7 +14,12 @@ const UniversalComponent = universal(props => import(`../Views/${props.page}`), 
 	),
 	ignoreBabelRename: true,
 });
-
+let userLoggedIn = false,
+	userName = ''
+let onUserLogin = (val) => {
+	userLoggedIn = true;
+	userName = val
+}
 export default () => (
 	<div>
 		{/* <Link to={`/`} className={''}>
@@ -28,8 +33,11 @@ export default () => (
 				<Navbar.Toggle />
 			</Navbar.Header>
 			<Navbar.Collapse>
-				<Navbar.Text pullRight>Have a great day!</Navbar.Text>
-			</Navbar.Collapse>
+				{!userLoggedIn ? 
+					(<Navbar.Text pullRight>Have a great day!</Navbar.Text>) : 
+					(<Navbar.Text pullRight><Glyphicon glyph="user" /> {userName}</Navbar.Text>)
+				}
+			</Navbar.Collapse> 
 		</Navbar>
 		<Switch>
 			<Route
@@ -40,7 +48,12 @@ export default () => (
 			<Route
 				exact
 				path="/login"
-				render={routeProps => <UniversalComponent page="Login" {...routeProps} />}
+				render={routeProps => <UniversalComponent page="Login" {...routeProps} onUserLogin={onUserLogin} />}
+			/>
+			<Route
+				exact
+				path="/patient"
+				render={routeProps => <UniversalComponent page="PatientDashboard" {...routeProps} />}
 			/>
 			
 		</Switch>

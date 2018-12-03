@@ -25,8 +25,9 @@ class Login extends React.Component {
     }
     OnLoginClick(){
         let {username,password} = this.state
-        
+
         if( username === 'admin' && password === 'admin' ) {
+            this.props.onUserLogin(username);
             this.setState({redirect: true})
         } else {
             const newAlert ={
@@ -42,7 +43,7 @@ class Login extends React.Component {
         this.setState({alertList: []})
     }
     renderRedirect(){
-        return <Redirect to='/' />
+        return <Redirect to='/patient' />
     }
     render() {
         if(this.state.redirect){
